@@ -64,33 +64,4 @@ class RegistrationController extends AbstractController
             ]);
         }
     }
-
-    public function apiCall($sources) {
-        $return_apiKey_value = match ($sources) {
-            'openweathermap' => "http://api.openweathermap.org/data/2.5/weather?q=Cebu%20City,ph&appid=d7fcc9556025fb0dfca2db1149a64549",
-            'weatherapi' => "https://api.weatherapi.com/v1/current.json?key=5ea344b89fd24211886154726231802&q=Cebu%20City",
-        };
-        $googleApiUrl = $return_apiKey_value;
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $googleApiUrl);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $response = curl_exec($ch);
-
-        curl_close($ch);
-        $weather = json_decode($response, true);
-        if ($sources == 'openweathermap') {
-            return $weather;
-        }
-        $result = [];
-        foreach ($weather as $key => $value) {
-            $result = $value;
-        }
-        return $result;
-    }
 }
