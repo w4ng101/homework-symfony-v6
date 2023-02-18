@@ -1,0 +1,3 @@
+services:
+  pyrrah.openweathermap.client:
+    class: Pyrrah\OpenWeatherMapBundle\Services\Client
