@@ -1,8 +1,15 @@
 <?php
 namespace App\Services;
+use App\Services\Sources;
+use App\Services\Config;
 
 trait ApiCurl {
+    private $apiKey;
 
+    public function __construct(Config $apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
     public function apiCallCurl($apiEndPoint,$apiName) {
 
         $ch = curl_init();
@@ -24,7 +31,11 @@ trait ApiCurl {
             return [];
         }
 
-        if ($apiName == 'openweathermap' || $apiName == 'openweathermapv2') {
+        $apiArrKeyIndexName = array_keys($this->apiKey->apiKey());
+        // Note: $apiArrKeyIndexName[0] = openweathermap
+        // $apiArrKeyIndexName[1] = weatherapi
+        // Can able to add multiple make it sure same index in Services\Config file.
+        if ($apiName == $apiArrKeyIndexName[0]) {
             return $weather_result;
         }
 
