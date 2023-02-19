@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Services\ApiCall;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\User;
+use App\Services\ApiCall;
 
 #[Route('/api', name: 'api_')]
 class RegistrationController extends AbstractController
@@ -47,16 +47,16 @@ class RegistrationController extends AbstractController
             $user->setCity($city);
             $user->setCountry($country);
 
-            $api_openweathermap_response = $this->api->apiCallCurl('openweathermap');
-            $api_weatherapi_response = $this->api->apiCallCurl('weatherapi');
-            $average_temperature = $this->api->averageCalc($api_openweathermap_response['main']['temp'],$api_weatherapi_response['temp_f']);
+            $apiOpenweathermapResponse = $this->api->apiCallCurl('openweathermap');
+            $apiWeatherapiResponse = $this->api->apiCallCurl('weatherapi');
+            $averageTemperature = $this->api->averageCalc($apiOpenweathermapResponse['main']['temp'],$apiWeatherapiResponse['temp_f']);
 
-            $user->setTemperature($average_temperature);
+            $user->setTemperature($averageTemperature);
             $em->persist($user);
             $em->flush();
             return $this->json([
                 'message' => 'Successfully created',
-                'current_weather_forecast' => $average_temperature            
+                'current_weather_forecast' => $averageTemperature            
             ]);
         } catch (\Exception $e) {
             return $this->json([
